@@ -1,0 +1,41 @@
+@mixin button-styles
+    outline: none
+    border: none
+    border-radius: 15px
+    height: 50px
+    font-weight: 500
+    font-size: 18px
+    max-width: 200px
+    width: 100%
+
+.main
+    .overlay
+        position: fixed
+        height: 100vh
+        width: 100vw
+        background: rgba(0, 0, 0, 0.5)
+        button
+            @include button-styles
+            position: absolute
+            top: 50%
+            left: 50%
+            transform: translate(-50%, -50%)
+    .board
+        display: flex
+        flex-direction: column
+        gap: 15px
+        img
+            max-width: 200px
+            height: 200px
+            width: 100%
+        .winner
+            height: 18px
+            text-align: center
+            font-weight: 600
+        .btnWrapper
+            display: flex
+            flex-direction: column
+            gap: 20px
+            button
+                @include button-styles
+

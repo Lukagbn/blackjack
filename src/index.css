@@ -2,10 +2,31 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  background-image: url("/table.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 #root {
+  min-height: 100vh;
   display: flex;
-  height: 100vh;
-  background-color: greenyellow;
+  flex-direction: column;
+}
+main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  color: white;
+  justify-content: center;
+  align-items: center;
 }
