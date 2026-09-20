@@ -92,11 +92,3 @@ src/
 public/
 └── dealer.png   # Dealer image
 ```
-
-## Possible Improvements
-
-- Betting system and balance
-- Ace handling (11 → 1) for the player's hand
-- Deck of cards with real suits instead of random values
-- Sound effects and card animations
-- Custom `useBlackjack` hook to separate game logic from UI
