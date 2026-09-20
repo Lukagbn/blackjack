@@ -1,78 +1,100 @@
-# React + TypeScript + Vite
+# Blackjack
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A simple single-player Blackjack game built with React and TypeScript. You play against the dealer, and every move has a 10-second timer.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Classic Blackjack rules: get as close to 21 as possible without going over
+- 10-second countdown for each move; when time runs out, the dealer plays automatically
+- Dealer draws cards until reaching 18 or beating the player's total
+- Dealer's ace automatically switches from 11 to 1 to avoid busting
+- Instant result display: **You Won!**, **You Lost!** or **Draw!**
+- Start overlay and a "new game" button to restart at any time
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+- React
+- Typescript
+- Sass
 
-Note: This will impact Vite dev & build performances.
-You can also try [the experimental native React Compiler support in plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md#rust-react-compiler) by using `compiler: true` in the plugin options instead of using the Babel plugin.
+## Getting Started
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+
+- npm (or yarn / pnpm)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Installation
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+git clone <repository-url>
+cd <project-folder>
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### Run in development mode
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Then open the URL shown in the terminal (usually `http://localhost:5173`).
+
+### Build for production
+
+```bash
+npm run build
+```
+
+## How to Play
+
+1. Press **start** to begin the game. You get two cards and the dealer gets one.
+2. Choose an action before the timer runs out:
+   - **hit**: take another card (the timer resets to 10 seconds)
+   - **stand**: keep your hand; the dealer plays and the winner is decided
+3. If you reach 21 or go over, the round ends immediately.
+4. Press **new game** to return to the start screen.
+
+### Card values
+
+| Card          | Value |
+| ------------- | ----- |
+| 2-10          | Face value |
+| J, Q, K       | 10    |
+| Ace           | 11 (dealer's ace becomes 1 if needed) |
+
+### Dealer rules
+
+- The dealer draws while their total is **not higher than yours** and **below 18**.
+- If you bust (over 21), the dealer does not draw any cards.
+
+### Winning conditions
+
+| Situation                              | Result       |
+| -------------------------------------- | ------------ |
+| You go over 21                         | You Lost!    |
+| Dealer goes over 21                    | You Won!     |
+| Both have 21                           | Draw!        |
+| You have 21                            | You Won!     |
+| Dealer has 21                          | You Lost!    |
+| Higher total wins                      | Won / Lost   |
+| Equal totals                           | Draw!        |
+
+## Project Structure
 
 ```
+src/
+├── App.tsx      # Main game component (state, timer, UI)
+├── App.sass     # Styles
+└── utils.ts     # Pure helpers: randomCard, getWinner, winnerColor
+public/
+└── dealer.png   # Dealer image
+```
+
+## Possible Improvements
+
+- Betting system and balance
+- Ace handling (11 → 1) for the player's hand
+- Deck of cards with real suits instead of random values
+- Sound effects and card animations
+- Custom `useBlackjack` hook to separate game logic from UI
