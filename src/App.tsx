@@ -8,8 +8,7 @@ function App() {
   const [winner, setWinner] = useState<string>("");
   const [overlay, setOverlay] = useState<boolean>(true);
   const [triggerTimer, setTriggerTimer] = useState<number>(0);
-  const [startGameTimer, setStartGameTimer] = useState<boolean>(false);
-  const [time, setTime] = useState<number>(10);
+  const [time, setTime] = useState<number>(0);
 
   const playerSum = playerCards.reduce((acc, curr) => acc + curr, 0);
   const dealerSum = dealerCards.reduce((acc, curr) => acc + curr, 0);
@@ -24,6 +23,7 @@ function App() {
     }
   }
   function startGame() {
+    setTime(10);
     setOverlay(false);
     setWinner("");
     setDealerCards([randomCard()]);
@@ -49,7 +49,6 @@ function App() {
   function startBtn() {
     startGame();
     setTriggerTimer((prev) => prev + 1);
-    setStartGameTimer(true);
   }
   function standBtn() {
     setTime(0);
@@ -57,9 +56,8 @@ function App() {
     setTriggerTimer((prev) => prev + 1);
   }
   function newGameBtn() {
-    setTime(10);
+    setTime(0);
     restartGame();
-    setStartGameTimer(false);
   }
 
   useEffect(() => {
@@ -67,24 +65,27 @@ function App() {
   }, [dealerCards]);
 
   useEffect(() => {
-    if (time === 10 && !startGameTimer) return;
-    else if (time <= 0) return;
+    if (time === 0) return;
 
     const interval = setInterval(() => {
       setTime((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [time, startGameTimer]);
+  }, [time]);
 
   useEffect(() => {
     if (playerCards.length === 0 || dealerCards.length === 0) return;
 
     const timeOut = setTimeout(() => {
-      let newDealerCards = [...dealerCards];
+      const newDealerCards = [...dealerCards];
       let newDealerSum = dealerSum;
 
-      while (newDealerSum <= playerSum && newDealerSum < 18) {
+      while (
+        playerSum <= 21 &&
+        newDealerSum <= playerSum &&
+        newDealerSum < 18
+      ) {
         const newCard = randomCard();
 
         newDealerCards.push(newCard);
@@ -92,25 +93,7 @@ function App() {
       }
 
       setDealerCards(newDealerCards);
-
-      if (playerSum > 21) {
-        setWinner("You Lost!");
-      } else if (newDealerSum > 21) {
-        setWinner("You Won!");
-      } else if (playerSum === 21 && newDealerSum === 21) {
-        setWinner("Draw!");
-      } else if (playerSum === 21) {
-        setWinner("You Won!");
-      } else if (newDealerSum === 21) {
-        setWinner("You Lost!");
-      } else if (playerSum > newDealerSum) {
-        setWinner("You Won!");
-      } else if (playerSum < newDealerSum) {
-        setWinner("You Lost!");
-      } else {
-        setWinner("Draw!");
-      }
-
+      setWinner(getWinner(playerSum, newDealerSum));
       setTime(0);
     }, time * 1000);
 
@@ -119,8 +102,8 @@ function App() {
 
   useEffect(() => {
     if (playerSum >= 21) {
-      getWinner(playerSum, dealerSum);
       setTime(0);
+      setTriggerTimer((prev) => prev + 1);
     }
   }, [playerSum]);
 
