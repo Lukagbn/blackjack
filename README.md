@@ -2,6 +2,8 @@
 
 A simple single-player Blackjack game built with React and TypeScript. You play against the dealer, and every move has a 10-second timer.
 
+[Live Demo](https://blackjack-omega-ten.vercel.app/)
+
 ## Features
 
 - Classic Blackjack rules: get as close to 21 as possible without going over
