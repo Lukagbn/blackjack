@@ -1,5 +1,6 @@
 import "./App.sass";
 import { useEffect, useState } from "react";
+import { getWinner, randomCard, winnerColor } from "./utils";
 
 function App() {
   const [dealerCards, setDealerCards] = useState<number[]>([]);
@@ -13,63 +14,6 @@ function App() {
   const playerSum = playerCards.reduce((acc, curr) => acc + curr, 0);
   const dealerSum = dealerCards.reduce((acc, curr) => acc + curr, 0);
 
-  function randomCard(): number {
-    const cardNumber = Math.floor(Math.random() * 13) + 1;
-    if (cardNumber === 1) return 11;
-    else if (cardNumber > 10) return 10;
-    else return cardNumber;
-  }
-
-  function winningHand(): any {
-    if (playerSum > 21) {
-      setWinner("You Lost!");
-    } else if (dealerSum > 21) {
-      setWinner("You Won!");
-    } else if (playerSum === 21 && dealerSum === 21) {
-      setWinner("Draw!");
-    } else if (playerSum === 21) {
-      setWinner("You Won!");
-    } else if (dealerSum === 21) {
-      setWinner("You Lost!");
-    } else if (playerSum > dealerSum) {
-      setWinner("You Won!");
-    } else if (playerSum < dealerSum) {
-      setWinner("You Lost!");
-    } else {
-      setWinner("Draw!");
-    }
-  }
-
-  function startGame(): any {
-    setOverlay(false);
-    setWinner("");
-    setDealerCards([randomCard()]);
-    setPlayerCards([randomCard(), randomCard()]);
-  }
-
-  function restartGame(): any {
-    setOverlay(true);
-    setWinner("");
-    setDealerCards([]);
-    setPlayerCards([]);
-  }
-
-  function winnerColor(winner: string): string {
-    let color = "";
-    switch (winner) {
-      case "You Won!":
-        color = "#9acb36";
-        break;
-      case "You Lost!":
-        color = "red";
-        break;
-      case "Draw!":
-        color = "grey";
-        break;
-    }
-    return color;
-  }
-
   function changeAce(cards: number[], cardSum: number) {
     if (cards.includes(11) && cardSum > 21) {
       const indexOfAce = cards.findIndex((num) => num === 11);
@@ -79,11 +23,23 @@ function App() {
       );
     }
   }
+  function startGame() {
+    setOverlay(false);
+    setWinner("");
+    setDealerCards([randomCard()]);
+    setPlayerCards([randomCard(), randomCard()]);
+  }
+  function restartGame() {
+    setOverlay(true);
+    setWinner("");
+    setDealerCards([]);
+    setPlayerCards([]);
+  }
 
   function hitBtn() {
     if (playerSum !== 0 && playerSum > 21) {
       setTime(0);
-      winningHand();
+      getWinner(playerSum, dealerSum);
       return;
     }
     setTime(10);
@@ -97,7 +53,7 @@ function App() {
   }
   function standBtn() {
     setTime(0);
-    winningHand();
+    getWinner(playerSum, dealerSum);
     setTriggerTimer((prev) => prev + 1);
   }
   function newGameBtn() {
@@ -163,7 +119,7 @@ function App() {
 
   useEffect(() => {
     if (playerSum >= 21) {
-      winningHand();
+      getWinner(playerSum, dealerSum);
       setTime(0);
     }
   }, [playerSum]);
